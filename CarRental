@@ -1,0 +1,535 @@
+#include<fstream.h>
+#include<conio.h>
+#include<stdio.h>
+#include<process.h>
+#include<ctype.h>
+#include<string.h>
+class driver{
+		int dno;
+		char dname[40];
+		float dsalary;
+		char dadd[100];
+		long dtelep;
+		public:
+		void daccept()
+		{
+		 cout<<"\t\n Enter driver number :";
+		 cin>>dno;
+		 cout<<"\t\n Enter name :";
+		 gets(dname);
+		 cout<<"\t\n Enter salary :";
+		 cin>>dsalary;
+		 cout<<"\t\n Enter address :";
+		 gets(dadd);
+		 cout<<"\t\n Enter telephone number :";
+		 cin>>dtelep;
+		 }
+		 void ddisplay()
+		 {
+		  cout<<"\n Driver code is        :"<<dno;
+		  cout<<"\n Driver name is        :"<<dname;
+		  cout<<"\n Driver salary is      :"<<dsalary;
+		  cout<<"\n Driver address is     :"<<dadd;
+		  cout<<"\n Driver phn number is  :"<<dtelep;
+		  }
+		  void dmod()
+		   {
+		     cout<<"\t\n Enter name :";
+		     gets(dname);
+		     cout<<"\t\n Enter salary :";
+		     cin>>dsalary;
+		     cout<<"\t\n Enter address :";
+		     gets(dadd);
+		     cout<<"\t\n Enter telephone number :";
+		     cin>>dtelep;
+		   }
+		   int getno()
+		   { return dno;
+		   }
+		 }d;
+
+void ddelete()
+{
+ ifstream fio("dmp.dat",ios::in|ios::binary);
+ ofstream file("temp.dat",ios::out|ios::binary);
+ int code;
+ char found='f';
+ cout<<"\n enter code of driver whose code is to be deleted :";
+ cin>>code;
+ while(!fio.eof())
+  {
+   fio.read((char*)&d,sizeof(d));
+   if(d.getno()==code)
+    {
+     found='t';
+    }
+    else
+    file.write((char*)&d,sizeof(d));
+   }
+   if(found=='f')
+   cout<<"Record not found\n";
+   fio.close();
+   file.close();
+   remove("dmp.dat");
+   rename("temp.dat","dmp.dat");
+   }
+ void dmodify()
+   {
+    fstream fio("dmp.dat",ios::in|ios::out|ios::binary);
+    int code;
+    int pos;
+    char found='f';
+    cout<<"\n Enter code of employee to modify: ";
+    cin>>code;
+    fio.seekg(0);
+    while(!fio.eof())
+     {
+      fio.read((char*)&d,sizeof(d));
+      if(d.getno()==code)
+      {
+       cout<<"\n DRIVER'S NEW DETAILS ";
+       d.dmod();
+       pos=fio.tellg();
+       fio.seekg(pos-sizeof(d));
+       fio.write((char*)&d,sizeof(d));
+       found='t';
+       cout<<"\n RECORD UPDATED ";
+       break;
+      }
+     }
+     if(found=='f')
+      cout<<"Record not found";
+     fio.seekg(0);
+     }
+void dmain()
+ {
+  char ret='f';
+  do
+  {
+  clrscr();
+  int no;
+  cout<<"\n\n\t -------------------------------------------------------";
+  cout<<"\n\n\t\t\t   DRIVER DETAILS \n";
+  cout<<"\n\n\t -------------------------------------------------------";
+  cout<<"\n\n\t 1.ACCEPT DETAILS ";
+  cout<<"\n\n\t 2.DISPLAY SPECIFIC DETAILS ";
+  cout<<"\n\n\t 3.MODIFY DETAILS ";
+  cout<<"\n\n\t 4.DELETE DETAILS ";
+  cout<<"\n\n\t 5.RETURN TO MAIN MENU ";
+  cout<<"\n\n\t #ENTER YOUR CHOICE:";
+  cin>>no;
+  clrscr();
+  switch(no)
+   {
+    case 1:ofstream fout("dmp.dat",ios::out|ios::binary);
+	   char ch='y';
+	   while(ch=='y'||ch=='Y')
+	   {
+	     d.daccept();
+	     fout.write((char*)&d,sizeof(d));
+	     cout<<"\n do you want to enter more(y-yess or n-no)";
+	     cin>>ch;
+	   }
+	     break;
+     case 2:int code;
+	    char c='f';
+	    fstream fin("dmp.dat",ios::in|ios::binary);
+	    fin.seekg(0);
+	    cout<<"enter code to display";
+	    cin>>code;
+	    clrscr();
+	    while(!fin.eof())
+	    {
+	      fin.read((char*)&d,sizeof(d));
+	      if(fin.eof())break;
+	      if(d.getno()==code)
+	       {
+		d.ddisplay();
+		getch();
+		c='t';
+	       }
+	     }
+	     if(c=='f')
+	     {
+	      cout<<"\n # record not found ";
+	     }
+	     break;
+      case 3:dmodify();
+	     break;
+      case 4:ddelete();
+	     break;
+      case 5:ret='t';
+	     break;
+     default:cout<<"WRONG CHOICE ENTER.....TRY AGAIN !!!! ";
+	     break;
+      }
+      getch();
+   }while(ret=='f');
+  }
+  class customer{
+		int cno;
+		char cname[40];
+		char cadd[100];
+		long ctel;
+		char ac;
+		char type[15];
+		float dist;
+		float fare;
+		float f;
+		void asgfare()
+		{
+		 ac='y';
+		 f=180;
+		if(strcmpi(type,"SUV")==0)
+		 {
+		  if(ac=='y'||ac=='Y')
+		   {
+		     if(dist>=0 && dist<120)
+		      {
+		       fare=f+(f+(0.1*f))+(dist*125);
+		      }
+		     else
+		      {
+		       cout<<"\nSorry!Wrong data ";
+		      }
+		    }
+		  else
+		    {
+		     if(dist>=0 && dist<120)
+		      {
+		       fare=f+(f+(0.05*f))+(dist*125);
+		      }
+		     else
+		      {
+		       cout<<"\nSorry!Wrong data ";
+		      }
+		    }
+		   }
+		  else if(strcmpi(type,"Sedan")==0)
+		   {
+		    if(ac=='y'||ac=='Y')
+		    {
+		     if(dist>=0 && dist<100)
+		      {
+		       fare=f+(f+(0.08*f))+(dist*115);
+		      }
+		     else
+		      {
+		       cout<<"\nSorry!Wrong data ";
+		      }
+		    }
+		    else
+		     {
+		      if(dist>=0 && dist<100)
+		       {
+			fare=f+(f+(0.04*f))+(dist*115);
+		       }
+		      else
+		       {
+			cout<<"\nSorry!Wrong data ";
+		       }
+		     }
+		    }
+		  else if(strcmpi(type,"Hatchback")==0)
+		   {
+		    if(ac=='y'||ac=='Y')
+		     {
+		      if(dist>=0 && dist<80)
+		       {
+			fare=f+(f+(0.06*f))+(dist*105);
+		       }
+		      else
+		       {
+			cout<<"\nSorry!Wrong data ";
+		       }
+		     }
+		    else
+		     {
+		      if(dist>=0 && dist<80)
+		       {
+			fare=f+(f+(0.03*f))+(dist*105);
+		       }
+		      else
+		       {
+			cout<<"\nSorry!Wrong data ";
+		       }
+		      }
+		     }
+		   }
+		public:
+		void caccept()
+		{
+		 cout<<"\n enter customer number :";
+		 cin>>cno;
+		 cout<<"\n enter customer name :";
+		 gets(cname);
+		 cout<<"\n enter customers address :";
+		 gets(cadd);
+		 cout<<"\n enter customer telephone number :";
+		 cin>>ctel;
+		 cout<<"\n enter Distance travelled(in Km) :";
+		 cin>>dist;
+		 cout<<"\n Car Type(Suv,Sedan,Hatchback) :";
+		 gets(type);
+		 cout<<"\n air conditioned(y/n) :";
+		 cin>>ac;
+		 asgfare();
+		 }
+		 void cdisp()
+		 {
+		 cout<<"\n customer number           :"<<cno;
+		 cout<<"\n customer name             :"<<cname;
+		 cout<<"\n customers address         :"<<cadd;
+		 cout<<"\n customer telephone number :"<<ctel;
+		 cout<<"\n Distance(in Km)           :"<<dist;
+		 cout<<"\n Car Type                  :"<<type;
+		 cout<<"\n Fare                      :"<<fare;
+		 }
+		 void cbill()
+		 {
+		  asgfare();
+		  int wi=15,tot;
+		  long tax;
+		  cout<<"\n\n\t-------------------------------------------------";
+		  cout<<"\n\t\t   **** VDP CARS ****";
+		  cout<<"\n\t\t     *** BILL NO :"<<cno<<" *** ";
+		  cout<<"\n\n\t--------------------------------------------------";
+		  cout<<"\n\t # NAME                   :"<<cname;
+		  cout<<"\n\t # ADDRESS                :"<<cadd;
+		  cout<<"\n\t # TELEPHONE              :"<<ctel;
+		  cout<<"\n\t # DISTANCE               :"<<dist;
+		  cout<<"\n\t # TYPE                   :"<<type;
+		  cout<<"\n\t # FARE                   :"<<"Rs."<<fare;
+		  cout<<"\n\t         * EXTRA CHARGES *";
+		  cout<<"\n\t               # Wi-Fi    : "<<"Rs."<<wi;
+		  tax=0.05*(f+wi);
+		  cout<<"\n\t               # TAX - 5% : "<<"Rs."<<tax;
+		  cout<<"\n\n\t**************************************************";
+		  tot=fare+wi+tax;
+		  cout<<"\n\t # TOTAL AMOUNT           : "<<"Rs."<<tot;
+		  }
+		  void cedit()
+		  {
+		   cout<<"\n enter Distance travelled(in Km) :";
+		   cin>>dist;
+		   cout<<"\n Car Type(Suv,Sedan,Hatchback) :";
+		   gets(type);
+		   cout<<"\n air conditioned(y/n) :";
+		   cin>>ac;
+		   asgfare();
+		  }
+		 int getno()
+		 {
+		  return cno;
+		 }
+	       }c;
+  void cmodify()
+   {
+    fstream fio("cus.dat",ios::in|ios::out|ios::binary);
+    int cno;
+    char found='f';
+    long pos;
+    cout<<"\nEnter code of customer that has to be modified: ";
+    cin>>cno;
+    while(!fio.eof())
+     {
+      fio.read((char*)&c,sizeof(c));
+      if(c.getno()==cno)
+      {
+       c.cedit();
+
+       pos=fio.tellg();
+       fio.seekg(pos-sizeof(c));
+       fio.write((char*)&c,sizeof(c));
+       found='t';
+
+       break;
+      }
+     }
+     if(found=='f')
+      cout<<"Record not found";
+     fio.seekg(0);
+     }
+  void cdelete()
+  {
+   fstream fio("cus.dat",ios::in|ios::binary);
+   ofstream file("tmp.dat",ios::out|ios::binary);
+   int code;
+   char found='f';
+   cout<<"\n enter code of employee whose code is to be deleted :";
+   cin>>code;
+   while(!fio.eof())
+   {
+    fio.read((char*)&c,sizeof(c));
+    if(c.getno()==code)
+     {
+      found='t';
+     }
+     else
+     file.write((char*)&c,sizeof(c));
+   }
+    if(found=='f')
+    cout<<"Record not found\n";
+    fio.close();
+    file.close();
+    remove("cus.dat");
+    rename("tmp.dat","cus.dat");
+  }
+
+ void cmain()
+ {
+ int co=0;
+ do
+ {
+  clrscr();
+  int no;
+  cout<<"\n\n\t ----------------------------------------------------------";
+  cout<<"\n\t\t\t CUSTOMER DETAILS ";
+  cout<<"\n\n\t ----------------------------------------------------------";
+  cout<<"\n\n\t 1.ACCEPT DETAILS ";
+  cout<<"\n\n\t 2.DISPLAY BILL ";
+  cout<<"\n\n\t 3.DISPLAY SPECIFIC DETAILS ";
+  cout<<"\n\n\t 4.MODIFY DETAILS ";
+  cout<<"\n\n\t 5.DELETE DETAILS ";
+  cout<<"\n\n\t 6.RETURN TO MAIN MENU ";
+  cout<<"\n\n\t #ENTER YOUR CHOICE:";
+  cin>>no;
+  clrscr();
+  switch(no)
+   {
+     case 1:ofstream fout("cus.dat",ios::out|ios::binary);
+	    char ch='y';
+	    while(ch=='y'||ch=='Y')
+	    {
+	     c.caccept();
+	     fout.write((char*)&c,sizeof(c));
+	     cout<<"\n do you want to enter more(y-yess or n-no)";
+	     cin>>ch;
+	    }
+	    break;
+     case 2:int code;
+	    fstream fin("cus.dat",ios::in|ios::binary);
+	    cout<<"\n enter code number to display bill";
+	    cin>>code;
+	    clrscr();
+	    while(fin.read((char*)&c,sizeof(c)))
+	    {
+	     if(fin.eof())break;
+	     if(c.getno()==code)
+	      {
+	       c.cbill();
+	       getch();
+	      }
+	    }
+	    break;
+      case 3:int cod;
+	    fstream fio("cus.dat",ios::in|ios::binary);
+	    cout<<"\n enter code number to display details :";
+	    cin>>cod;
+	    clrscr();
+	    while(fio.read((char*)&c,sizeof(c)))
+	    {
+	     if(c.getno()==cod)
+	     c.cdisp();
+	     getch();
+	    }
+	    break;
+     case 4:cmodify();
+	    break;
+     case 5:cdelete();
+	    break;
+     case 6:co++;
+	    break;
+     default:cout<<"\n\n\t WRONG CHOICE ENTERED....PLEASE TRY AGAIN !!! ";
+	     break;
+    }
+    getch();
+   }
+   while(co==0);
+  }
+void password()
+{
+ char a,b[20],flag=0,c=0;
+ do
+ {
+  cout<<"\n\n\t ---------------------------------------------------------";
+  cout<<"\n\n\t\t     ***** WELCOME TO ****** ";
+  cout<<"\n\n\t\t     ****** VDP CABS ******* ";
+  cout<<"\n\n\t ---------------------------------------------------------";
+  if(flag==4)
+  {
+   cout<<"\n\t #LAST TRY !!! ";
+   getch();
+  }
+  cout<<"\n\t #ENTER PASSWORD:";
+  for(int i=0;;i++)
+  {
+   a=getch();
+   if(a=='\r')
+   break;
+   b[i]=a;
+   cout<<"*";
+  }
+  b[i]='\0';
+  flag++;
+  if(strcmpi(b,"pradeep")==0)
+   {
+    cout<<"\n\t #ACCESS GRANTED";
+    c++;
+   }
+  else
+   {
+    if(flag<5)
+    {
+     cout<<"\n\t #INCORRECT PASSWORD";
+     getch();
+     clrscr();
+    }
+    else
+    {
+     cout<<"\n\t #ACCESS DENIED ";
+     getch();
+     exit(0);
+    }
+   }
+  }
+ while(c==0);
+}
+void main()
+{
+ clrscr();
+ char num;
+ password();
+ do
+ {
+  clrscr();
+  cout<<"\n\n\t --------------------------------------------------------";
+  cout<<"\n\n\t\t\t     ****** VDP CABS ****** ";
+  cout<<"\n\n\t\t\t      **** MAIN MENU **** ";
+  cout<<"\n\n\t --------------------------------------------------------";
+  cout<<"\n\n\t  1.STAFF MENU";
+  cout<<"\n\n\t  2.CUSTOMER MENU";
+  cout<<"\n\n\t  3.EXIT";
+  cout<<"\n\n\t  #ENTER CHOICE (1-3):";
+  cin>>num;
+  switch(num)
+  {
+   case '1':dmain();
+	    break;
+   case '2':cmain();
+	    break;
+   case '3':clrscr();
+	    cout<<"\n\n\t --------------------------------------------------------";
+	    cout<<"\n\n\t\t\t   ********* VDP CABS ********* ";
+	    cout<<"\n\n\t\t\t   ** THANK YOU RIDE AGAIN !!!! ** ";
+	    cout<<"\n\n\t --------------------------------------------------------";
+	    getch();
+	    exit(0);
+   default:cout<<"\n\n\t WRONG CHOICE ENTERED....PLEASE TRY AGAIN !!! ";
+	   break;
+  }
+  getch();
+ }
+ while(1);
+}
+
